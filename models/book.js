@@ -1,7 +1,4 @@
 const mongoose = require('mongoose')
-const path = require('path')
-
-const coverImageBasePath = 'uploads/bookCovers'   //would be inside public folder. path defined in bookRouter
 
 const bookSchema = new mongoose.Schema({
   title: {
@@ -24,7 +21,11 @@ const bookSchema = new mongoose.Schema({
     required: true,
     default: Date.now
   },
-  coverImageName: {
+  coverImage: {
+    type: Buffer,
+    required: true
+  },
+  coverImageType: {
     type: String,
     required: true
   },
@@ -38,10 +39,9 @@ const bookSchema = new mongoose.Schema({
 //when we call book.coverImagePath, this get function is called
 bookSchema.virtual('coverImagePath').get(function() {
   //using function instead of '()=>' so as to access 'this' variable
-  if(this.coverImageName != null) {
-    return path.join('/', coverImageBasePath, this.coverImageName)    // '/' for base public folder
+  if(this.coverImage != null && this.coverImageType != null) {
+    return `data:${this.coverImageType};charset=utf-8;base64,${this.coverImage.toString('base64')}`
   }
 })
 
 module.exports = mongoose.model('Book', bookSchema)
-module.exports.coverImageBasePath = coverImageBasePath
