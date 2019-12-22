@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const path = require('path')
 
 const coverImageBasePath = 'uploads/bookCovers'   //would be inside public folder. path defined in bookRouter
 
@@ -31,6 +32,14 @@ const bookSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'Author'
+  }
+})
+
+//when we call book.coverImagePath, this get function is called
+bookSchema.virtual('coverImagePath').get(function() {
+  //using function instead of '()=>' so as to access 'this' variable
+  if(this.coverImageName != null) {
+    return path.join('/', coverImageBasePath, this.coverImageName)    // '/' for base public folder
   }
 })
 
