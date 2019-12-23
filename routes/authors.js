@@ -5,7 +5,7 @@ const Author = require('../models/author')
 //All Authors
 router.get('/', async (req, res) => {
   let searchOptions = {}
-  if(req.query.name !== null && req.query.name !== '') {
+  if (req.query.name !== null && req.query.name !== '') {
     searchOptions.name = new RegExp(req.query.name, 'i')    //i for case-insensitive. RegExp to match partial string as well
   }
   try {
@@ -26,20 +26,70 @@ router.get('/new', (req, res) => {
 
 //Create New Author
 router.post('/', async (req, res) => {
-  
+
   const author = new Author({
     name: req.body.name         //explicitly assigning to name, so user can't accidently set id
   })
 
   try {
     const newAuthor = await author.save()
-    
-    res.redirect('authors')
+    res.redirect(`authors/${author.id}`)
   } catch {
     res.render('authors/new', {
       author: author,
       errorMessage: 'Error Creating Author'
     })
+  }
+})
+
+router.get('/:id', (req, res) => {
+  res.send()
+})
+
+router.get('/:id/edit', async (req, res) => {
+  try {
+    const author = await Author.findById(req.params.id)
+    res.render('authors/edit', { author: author })
+  } catch {
+    res.redirect('/authors')
+  }
+})
+
+router.put('/:id', async (req, res) => {
+  let author
+  try {
+    author = await Author.findById(req.params.id)
+    author.name = req.body.name
+    await author.save()
+
+    res.redirect(`/authors/${author.id}`)
+  } catch {
+
+    if (author == null) {
+      res.redirect('/')
+    } else {
+
+      res.render('authors/new', {
+        author: author,
+        errorMessage: 'Error Updating Author'
+      })
+    }
+  }
+})
+
+router.delete('/:id', async (req, res) => {
+  let author
+  try {
+    author = await Author.findById(req.params.id)
+    await author.remove()
+    res.redirect(`/authors`)
+  } catch {
+
+    if (author == null) {
+      res.redirect('/')
+    } else {
+      res.redirect(`/authors/${author.id}`)
+    }
   }
 })
 
