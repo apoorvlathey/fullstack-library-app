@@ -1,25 +1,31 @@
 <h2 class="page-header">Search Books</h2 class="page-header">
 <form action="/books" method="get">
-  <div>
-    <label for="">Title</label>
-    <input type="text" name="title" id="" value="<%= searchOptions.title %>">
+  <div class="form-row">
+    <div class="form-item">
+      <label for="">Title</label>
+      <input type="text" name="title" id="" value="<%= searchOptions.title %>">
+    </div>
   </div>
-  <div>
-    <label for="">Published After</label>
-    <input type="date" name="publishedAfter" id="" value="<%= searchOptions.publishedAfter %>">
+  <div class="form-row">
+    <div class="form-item">
+      <label for="">Published After</label>
+      <input type="date" name="publishedAfter" id="" value="<%= searchOptions.publishedAfter %>">
+    </div>
+    <div class="form-item">
+      <label for="">Published Before</label>
+      <input type="date" name="publishedBefore" id="" value="<%= searchOptions.publishedBefore %>">
+    </div>
   </div>
-  <div>
-    <label for="">Published Before</label>
-    <input type="date" name="publishedBefore" id="" value="<%= searchOptions.publishedBefore %>">
+  <div class="form-row form-row-end btn-row">
+    <button class="btn btn-primary" type="submit">Search</button>
   </div>
-  <button type="submit">Search</button>
 </form>
 <br>
 <div>
   <% books.forEach(book => { %>
     <a href="/books/<%= book.id %>">
       <img src="<%= book.coverImagePath %>" alt="" height="150" width="100">
-      <div><%= book.title %></div>
+      <!-- <div><%= book.title %></div> -->
     </a>
   <% }) %>
 </div>
